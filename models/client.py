@@ -1,3 +1,5 @@
+import json
+
 from orm import base, sa
 
 class Client(base):
@@ -14,3 +16,5 @@ class Client(base):
             phone_number=self.phone_number,
             reg_date=str(int(self.reg_date.timestamp()))
         )
+    def __str__(self):
+        return json.dumps(self.as_dict(), ensure_ascii=False, indent=4)

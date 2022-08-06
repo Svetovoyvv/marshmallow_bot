@@ -13,8 +13,22 @@ class ApiAnswer:
             'response': self.__response,
             'error': str(self.__error)
         }
+    @property
+    def status(self):
+        return self.__status
+    @property
+    def response(self):
+        return self.__response
+    @property
+    def err(self):
+        return self.__error
     def json(self):
-        return json.dumps(self.as_dict(), ensure_ascii=False, indent=4)
+        return json.dumps(
+            self.as_dict(),
+            ensure_ascii=False,
+            indent=4,
+            default=str
+        )
     @classmethod
     def ok(cls, response: ...):
         return cls(True, response, None)
@@ -23,3 +37,5 @@ class ApiAnswer:
         if isinstance(error, str):
             error = ApiException(error)
         return cls(False, None, error)
+    def __str__(self):
+        return self.json()

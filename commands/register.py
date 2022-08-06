@@ -6,6 +6,7 @@ async def cmd_contact(message: Message):
     r = api.client.get(chat_id=message.chat.id)
     if not r.status:
         return await message.answer('Произошла ошибка.')
+    print(r)
     if r.response is not None:
         await message.answer('Клиент уже зарегистрирован.')
         return cmd_menu(message)
@@ -13,9 +14,9 @@ async def cmd_contact(message: Message):
         chat_id=message.chat.id,
         phone_number=message.contact.phone_number
     )
-    if r['status']:
+    if r.status:
         await message.answer(
-            'Клиент зарегистрирован. Ваш номер: %s' % r['response']['client_id']
+            'Клиент зарегистрирован. Ваш номер: %s' % r.response
         )
     else:
-        await message.answer(r['error'])
+        await message.answer(r.err)

@@ -34,7 +34,7 @@ async def http_handler(request: web.Request):
     return web.Response(text='OK')
 
 if __name__ == '__main__':
-
+    import imports
     logging.info(str(dp.message_handlers.handlers))
     application = get_new_configured_app(dispatcher=dp, path='/webhook')
     application.on_startup.append(on_startup)

@@ -14,7 +14,7 @@ conn_string = f"""
     @{os.environ.get('DB_HOST')}:{os.environ.get('DB_PORT')}
     /{os.environ.get('DB_NAME')}
 """.translate(str.maketrans({'\n': '', '\r': '', ' ': ''}))
-print(conn_string)
+# print(conn_string)
 engine = sa.create_engine(conn_string)
 base.metadata.bind = engine
 session = orm.scoped_session(orm.sessionmaker())(bind=engine)
