@@ -1,0 +1,4 @@
+python-dotenv~=0.20.0
+aiogram~=2.21
+aiohttp~=3.8.1
+SQLAlchemy~=1.4.39
