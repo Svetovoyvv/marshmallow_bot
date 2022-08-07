@@ -40,13 +40,23 @@ async def http_handler(request: web.Request):
         if mth == 'update_status':
             order = api.order.get(order_id=order_id).response
             chat = order.client.chat_id
-
+            from hashlib import md5
             # print(chat, order)
+            code = md5(str('Coffee:' + str(order.id)).encode()).hexdigest()[:4]
             # print(order.statuses[nst])
+            text = f'Заказ {order.id} был обновлен\n{order.product.name} ({order.count})\nНовый статус: {order.statuses[nst]}'
+            if nst == 3:
+                text += f'\nДля получения используйте QR или код: {code}'
             await bot.send_message(
                 chat,
-                text=f'Заказ {order.id} был обновлен\n{order.product.name} ({order.count})\nНовый статус: {order.statuses[nst]}'
+                text=text
             )
+            if nst == 3:
+                import qrcode
+                from io import BytesIO
+                buffered = BytesIO()
+                qrcode.make(code).save(buffered, format="JPEG")
+                await bot.send_photo(chat_id=chat, photo=buffered.getvalue())
     except Exception as e:
         print('exc', e)
 

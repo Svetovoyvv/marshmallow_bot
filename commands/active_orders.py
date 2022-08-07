@@ -4,26 +4,36 @@ from api import api
 async def cmd_active_orders(msg: Message):
     a = api.order.get_active(client_id=api.client.get(chat_id=msg.chat.id).response.id)
     kb = InlineKeyboardMarkup()
+    n = False
     for i in a.response:
         if i[0].status not in [1, 2]:
             continue
         i = i[0]
+        n = True
         kb.add(InlineKeyboardButton(text=f'{i.product.name} ({i.count}) | {i.status_text}', callback_data='order_id_' + str(i.id)))
+    text = 'Активные заказы'
+    if not n:
+        text = 'В данный момент нет активных заказов.'
     kb.add(InlineKeyboardButton(text='Назад', callback_data='cancel_profile'))
-    await msg.answer('Активные заказы', reply_markup=kb)
+    await msg.answer(text, reply_markup=kb)
 
 @dp.callback_query_handler(text_startswith='list_active_')
 async def callback_list_active_orders(callback_query: CallbackQuery):
     a = api.order.get_active(client_id=api.client.get(chat_id=callback_query.message.chat.id).response.id)
     kb = InlineKeyboardMarkup()
+    n = False
     for i in a.response:
         if i[0].status not in [1, 2]:
             continue
         i = i[0]
+        n = True
         kb.add(InlineKeyboardButton(text=f'{i.product.name} ({i.count}) | {i.status_text}',
                                     callback_data='order_id_' + str(i.id)))
     kb.add(InlineKeyboardButton(text='Назад', callback_data='cancel_profile'))
-    await callback_query.message.edit_text('Активные заказы', reply_markup=kb)
+    text = 'Активные заказы'
+    if not n:
+        text = 'В данный момент нет активных заказов.'
+    await callback_query.message.edit_text(text, reply_markup=kb)
 @dp.callback_query_handler(text_startswith='order_id_')
 async def callback_active_orders(callback_query: CallbackQuery):
     order_id = int(callback_query.data.split('_')[-1])
