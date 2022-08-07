@@ -3,9 +3,9 @@ log = getLogger('commands')
 
 
 from .profile import *
-from .order_select_shop import *
-from .active_orders import *
 
+from .active_orders import *
+from .order import *
 
 from .menu import *
 from .register import *

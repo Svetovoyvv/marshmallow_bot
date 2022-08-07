@@ -27,4 +27,5 @@ class client:
         session.execute(q.insert(Client).values(chat_id=chat_id, phone_number=phone_number))
         cl = session.execute(q.select(Client).where(Client.chat_id == chat_id)).fetchone()
         session.commit()
+        print('reg', cl)
         return ApiAnswer.ok(cl[0].id)

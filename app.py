@@ -15,9 +15,11 @@ logging.basicConfig(
 )
 
 
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
+storage = MemoryStorage()
 bot = aiogram.Bot(token=os.environ.get('tg_token'))
-dp = aiogram.Dispatcher(bot)
+dp = aiogram.Dispatcher(bot, storage=storage)
 from commands import *
 
 async def on_startup(app: web.Application):
@@ -30,7 +32,24 @@ async def on_shutdown(app: web.Application):
     await bot.delete_webhook()
 
 async def http_handler(request: web.Request):
-    print(await request.json())
+    try:
+        mth = request.rel_url.query['method']
+        order_id = request.rel_url.query.get('order_id', None)
+        nst = int(request.rel_url.query.get('new_status', None))
+        # print(mth, order_id, nst)
+        if mth == 'update_status':
+            order = api.order.get(order_id=order_id).response
+            chat = order.client.chat_id
+
+            # print(chat, order)
+            # print(order.statuses[nst])
+            await bot.send_message(
+                chat,
+                text=f'Заказ {order.id} был обновлен\n{order.product.name} ({order.count})\nНовый статус: {order.statuses[nst]}'
+            )
+    except Exception as e:
+        print('exc', e)
+
     return web.Response(text='OK')
 
 if __name__ == '__main__':

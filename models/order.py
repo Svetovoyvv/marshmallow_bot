@@ -21,9 +21,7 @@ class Order(base):
     @property
     def statuses(self):
         return {
-            0: 'Отменен',
             1: 'Принят',
             2: 'Готовится',
-            3: 'Готов',
-            4: 'Завершен'
+            3: 'Готов'
         }

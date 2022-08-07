@@ -8,5 +8,5 @@ class Product(base):
     description = sa.Column(sa.Text)
     image = sa.Column(sa.String(256))
     price = sa.Column(sa.Integer)
-    shop_id = sa.Column(sa.ForeignKey('shop.id'), nullable=False)
+    shop_id = sa.Column(sa.ForeignKey('shop.id'), default=1)
     shop = relationship('Shop', backref='products')
